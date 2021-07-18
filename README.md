@@ -1,6 +1,6 @@
 [![ci](https://github.com/fedor-malyshkin/coding-spark/workflows/ci/badge.svg)](https://github.com/fedor-malyshkin/coding-spark/actions/workflows/ci.yml)
 
-# coding-scala
+# coding-spark
 
 Some exercise with Apache Spark
 
