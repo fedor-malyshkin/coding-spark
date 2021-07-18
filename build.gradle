@@ -1,0 +1,116 @@
+ext {
+// scala
+    SCALA_VER = '2.12'
+    SCALA_LIBRARY_VER = '2.12.14'
+    SCALA_XML_VER = '1.3.0'
+
+    // play json
+    PLAY_JSON_VER = '2.9.2'
+
+    // DB
+    LEVELDB_VER = "0.12"
+    LEVELDBJNI_VER = "1.8"
+    POSTGRES_VER = "42.2.2"
+    CASSANDRA_VER = "1.0.5"
+
+    // Spark
+    SPARK_VER = "3.1.2"
+    SPARK_CASSANDRA_CONNECTION_VER = '3.0.1'
+
+    // Kafka
+    KAFKA_VER = '2.8.0'
+
+// logging
+    SLF4J_VER = '1.7.30'
+    LOGBACK_VER = '1.2.3'
+
+
+// test scala
+    SCALA_TEST_VER = '3.2.9'
+    SCALA_MOCK_VER = '5.0.0'
+
+// test
+    TEST_JUNIT_VER = '4.12'
+    TEST_MOCKITO_VER = '2.21.0'
+    TEST_ASSERTJ_VER = '3.11.0'
+    TEST_JSONASSERT_VER = '1.5.0'
+}
+
+// project dependencies
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        // scalatest plugin
+        classpath "gradle.plugin.com.github.maiflai:gradle-scalatest:0.30"
+    }
+}
+
+apply plugin: 'scala'
+apply plugin: "com.github.maiflai.scalatest"
+
+java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(13)
+//    }
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
+}
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+test.dependsOn('scalatest')
+
+dependencies {
+    implementation "org.scala-lang:scala-library:${SCALA_LIBRARY_VER}"
+    implementation "org.scala-lang.modules:scala-xml_${SCALA_VER}:${SCALA_XML_VER}"
+    implementation "com.typesafe.play:play-json_${SCALA_VER}:${PLAY_JSON_VER}"
+
+
+    // Level DB
+    // local levelDB stores
+    implementation "org.iq80.leveldb:leveldb:${LEVELDB_VER}"
+    implementation "org.fusesource.leveldbjni:leveldbjni-all:${LEVELDBJNI_VER}"
+
+    // cassandra
+    implementation "com.typesafe.akka:akka-persistence-cassandra_${SCALA_VER}:${CASSANDRA_VER}"
+    testImplementation "com.typesafe.akka:akka-persistence-cassandra-launcher_${SCALA_VER}:${CASSANDRA_VER}"
+
+    // Spark
+    implementation "org.apache.spark:spark-core_${SCALA_VER}:${SPARK_VER}"
+    implementation "org.apache.spark:spark-sql_${SCALA_VER}:${SPARK_VER}"
+    implementation "org.apache.spark:spark-streaming_${SCALA_VER}:${SPARK_VER}"
+    // Spark misc
+    implementation "org.postgresql:postgresql:${POSTGRES_VER}"
+    implementation "org.apache.spark:spark-sql-kafka-0-10_${SCALA_VER}:${SPARK_VER}"
+    // low-level integrations
+    implementation "org.apache.spark:spark-streaming-kafka-0-10_${SCALA_VER}:${SPARK_VER}"
+    implementation "org.apache.spark:spark-streaming-kinesis-asl_${SCALA_VER}:${SPARK_VER}"
+
+    implementation "com.datastax.spark:spark-cassandra-connector_${SCALA_VER}:${SPARK_CASSANDRA_CONNECTION_VER}"
+
+    // Kafka
+    implementation "org.apache.kafka:kafka_${SCALA_VER}:${KAFKA_VER}"
+
+    // Logging
+    // implementation group: 'org.slf4j', name: 'slf4j-api', version: "${SLF4J_VER}"
+    // implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${LOGBACK_VER}"
+
+    // testing (scala)
+    testImplementation "org.scalatest:scalatest_${SCALA_VER}:${SCALA_TEST_VER}"
+    testImplementation "org.scalamock:scalamock_${SCALA_VER}:${SCALA_MOCK_VER}"
+    testImplementation 'com.vladsch.flexmark:flexmark-all:0.36.8'
+
+    testImplementation "junit:junit:${TEST_JUNIT_VER}"
+    testImplementation "org.mockito:mockito-core:${TEST_MOCKITO_VER}"
+    testImplementation "org.assertj:assertj-core:${TEST_ASSERTJ_VER}"
+}
